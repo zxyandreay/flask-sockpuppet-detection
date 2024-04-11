@@ -7,38 +7,58 @@ This Flask application analyzes and predicts whether a given text input is a "so
 
 ### Prerequisites
 - Python 3.x
-- Pip package manager
-- Virtual environment (recommended)
+- Flask: A lightweight WSGI web application framework.
+- Pandas: An open-source data analysis and manipulation tool.
+- NumPy: A library for adding support for large, multi-dimensional arrays and matrices, along with a large collection of high-level mathematical functions to operate on these arrays.
+- NLTK: A leading platform for building Python programs to work with human language data (natural language processing).
+- TextBlob: A library for processing textual data, providing simple APIs for common natural language processing (NLP) tasks.
+- Scikit-learn: A machine learning library for the Python programming language.
 
 ### Installation
 1. Clone the repository to your local machine:
 ```
-git clone https://your-repository-link-here.git
+git clone https://github.com/zxyandreay/flask-sockpuppet-detection.git
 ```
 2. Navigate to the project directory:
 ```
 cd flask-sockpuppet-detection
 ```
-3. Create and activate a virtual environment:
-- For Unix or MacOS:
-  ```
-  python3 -m venv env
-  source env/bin/activate
-  ```
-- For Windows:
-  ```
-  py -m venv env
-  .\env\Scripts\activate
-  ```
-4. Install the required dependencies:
+3. Run `install.bat` to create and activate a virtual environment, and install all the necessary prerequisites:
 ```
-pip install -r requirements.txt
+@echo off
+cd /d %~dp0
+
+echo Creating a Virtual Environment...
+python -m venv venv
+call venv\Scripts\activate
+
+echo Installing Flask...
+pip install Flask
+
+echo Installing pandas...
+pip install pandas
+
+echo Installing numpy...
+pip install numpy
+
+echo Installing textblob...
+pip install textblob
+
+echo Installing scikit-learn...
+pip install scikit-learn
+
+echo All required packages have been installed.
+pause
 ```
 
+
 ### Running the Application
-1. Start the Flask server:
+1. Use `start.bat` to activate the virtual environment and run the application:
 ```
-python app.py
+@echo off
+cd /d %~dp0
+call venv\Scripts\activate
+python app.py  
 ```
 2. Open a web browser and navigate to `http://127.0.0.1:5000/`.
 
