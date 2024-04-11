@@ -3,7 +3,6 @@ cd /d %~dp0
 
 echo Creating a Virtual Environment...
 python -m venv venv
-
 call venv\Scripts\activate
 
 echo Installing Flask...

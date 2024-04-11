@@ -2,68 +2,40 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Sockpuppet Detection</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <style>
         body {
-            font-family: 'Arial', sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background-color: #f4f4f4;
+            padding-top: 20px;
+            background-color: #f8f9fa;
         }
         .container {
-            max-width: 500px;
-            width: 100%;
-            background: #fff;
+            max-width: 600px;
+            margin: auto;
+            background-color: #fff;
             padding: 20px;
-            margin: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
         h1 {
-            color: #333;
+            margin-bottom: 20px;
             text-align: center;
         }
-        p {
-            text-align: center;
-            color: #555;
-        }
-        form {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        textarea {
+        .btn-primary {
+            width: 100%;
             padding: 10px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            resize: vertical;
-        }
-        button {
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            background-color: #007bff;
-            color: white;
-            cursor: pointer;
-            transition: background-color 0.3s ease-in-out;
-        }
-        button:hover {
-            background-color: #0056b3;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Sockpuppet Detection System</h1>
-        <p>Enter text to analyze:</p>
+        <h1>Sockpuppet Detection</h1>
+        <p>Please enter the text you wish to analyze:</p>
         <form action="/predict" method="post">
-            <textarea name="input_text" rows="5" placeholder="Type or paste text here..."></textarea>
-            <button type="submit">Analyze</button>
+            <div class="form-group">
+                <textarea name="input_text" class="form-control" rows="5"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Analyze</button>
         </form>
     </div>
 </body>

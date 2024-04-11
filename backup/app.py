@@ -63,14 +63,13 @@ def predict():
     subjectivity = TextBlob(processed_text).sentiment.subjectivity
     X_input = np.hstack((X_input_tfidf, np.array([[polarity, subjectivity]])))
 
-    # Get probability estimates for each class
-    probabilities = model.predict_proba(X_input)
-    sockpuppet_probability = probabilities[0][1]  # Assuming 1 is the 'sockpuppet' class
+    # Get the binary prediction for the class
+    prediction = model.predict(X_input)[0]  # 0 for 'non-sockpuppet', 1 for 'sockpuppet'
 
-    # Convert to percentage
-    probability_percentage = round(sockpuppet_probability * 100, 2)
+    # Translate the binary result to a meaningful string
+    result = 'sockpuppet' if prediction == 1 else 'non-sockpuppet'
 
-    return render_template('result.html', prediction=probability_percentage)
+    return render_template('result.html', prediction=result)
 
 # Define route for browser
 def open_browser():

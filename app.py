@@ -2,28 +2,42 @@ from flask import Flask, request, render_template, jsonify
 import webbrowser
 import pandas as pd
 import numpy as np
+import re
 from threading import Timer
 from textblob import TextBlob
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.impute import SimpleImputer
-from sklearn.model_selection import train_test_split
+from nltk.corpus import stopwords
+from nltk.stem import WordNetLemmatizer
+from nltk.tokenize import word_tokenize
 
 # Initialize Flask application
 app = Flask(__name__)
 
 # Load the dataset
-DATA_PATH = 'data/wikipedia_sockpuppet_dataset.csv'
+DATA_PATH = 'data/wikipedia_sockpuppet_dataset_TRAIN.csv'
 data = pd.read_csv(DATA_PATH)
 
 # Preprocess function (as defined in your script)
 def preprocess(text):
-    if isinstance(text, str):
-        return text.lower()
-    elif pd.isna(text):
-        return ""
-    else:
-        return str(text).lower()
+    # Convert text to lowercase
+    text = text.lower()
+    # Remove text within brackets and HTML tags
+    text = re.sub(r'\[.*?\]|\(.*?\)|\{.*?\}|\<.*?\>|https?://\S+|www\.\S+|<.*?>', '', text)
+    # Remove non-alphanumeric characters and numbers
+    text = re.sub(r'\W|\d+', ' ', text)
+    # Tokenization
+    tokens = word_tokenize(text)
+    # Remove stop words
+    stop_words = set(stopwords.words('english'))
+    tokens = [word for word in tokens if word not in stop_words]
+    # Lemmatization
+    lemmatizer = WordNetLemmatizer()
+    tokens = [lemmatizer.lemmatize(word) for word in tokens]
+    # Rejoin words into a cleaned string
+    cleaned_text = ' '.join(tokens)
+    return cleaned_text
 
 # Preprocessing the data
 data['edit_text'] = data['edit_text'].apply(preprocess)
@@ -41,12 +55,9 @@ imputer = SimpleImputer(strategy='median')
 y = data['is_sockpuppet'].values
 y = pd.Series(imputer.fit_transform(y.reshape(-1, 1)).ravel())
 
-# Split the dataset
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-
 # Initialize and train the model
 model = RandomForestClassifier(n_estimators=100, random_state=42)
-model.fit(X_train, y_train)
+model.fit(X, y)
 
 # Define route for home page
 @app.route('/')
@@ -63,14 +74,13 @@ def predict():
     subjectivity = TextBlob(processed_text).sentiment.subjectivity
     X_input = np.hstack((X_input_tfidf, np.array([[polarity, subjectivity]])))
 
-    # Get probability estimates for each class
-    probabilities = model.predict_proba(X_input)
-    sockpuppet_probability = probabilities[0][1]  # Assuming 1 is the 'sockpuppet' class
+    # Get the binary prediction for the class
+    prediction = model.predict(X_input)[0]  # 0 for 'non-sockpuppet', 1 for 'sockpuppet'
 
-    # Convert to percentage
-    probability_percentage = round(sockpuppet_probability * 100, 2)
+    # Translate the binary result to a meaningful string
+    result = 'sockpuppet' if prediction == 1 else 'non-sockpuppet'
 
-    return render_template('result.html', prediction=probability_percentage)
+    return render_template('result.html', prediction=result)
 
 # Define route for browser
 def open_browser():

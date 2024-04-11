@@ -24,26 +24,24 @@
         }
         .alert {
             padding: 20px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             border-radius: 5px;
+            color: #000; /* Default text color */
         }
-        .alert-success {
+        .alert-zero { /* Green for non-sockpuppet */
             background-color: #e9ffd9;
-            border: 1px solid #bada55;
         }
-        .alert-danger {
+        .alert-one { /* Red for sockpuppet */
             background-color: #ffd9d9;
-            border: 1px solid #ff4d4d;
         }
         a {
             display: inline-block;
             padding: 10px 15px;
-            margin-top: 10px;
             background-color: #007bff;
             color: white;
             text-decoration: none;
             border-radius: 5px;
-            text-align: center;
+            transition: background-color 0.3s;
         }
         a:hover {
             background-color: #0056b3;
@@ -54,11 +52,11 @@
     <div class="container">
         <h1>Prediction Result</h1>
         {% if prediction %}
-            <div class="alert alert-success">
+            <div class="alert {% if prediction == 'sockpuppet' %}alert-one{% elif prediction == 'non-sockpuppet' %}alert-zero{% endif %}">
                 <h4 class="alert-heading">Prediction Completed!</h4>
                 <p>The analysis predicts the following result:</p>
                 <hr>
-                <p class="mb-0">Likelihood of being a sockpuppet: <strong>{{ prediction }}%</strong></p>
+                <p class="mb-0">The comment was made by a <strong>{{ prediction|capitalize }}</strong></p>
             </div>
         {% else %}
             <div class="alert alert-danger">

@@ -1,0 +1,22 @@
+create a python program that will split the csv in a 'input' folder into training (80%) and testing (20%) set. the result of this split will then be saved inside the 'output' folder. the split should have equal number of classes, with even numbers.
+
+
+Context: We are creating a prototype that uses the combination of semantic and sentiment analysis in detecting sockpuppets in wikipedia. the following is the steps done in creating the prototype:
+
+1. getting a dataset from a repository in GitHub, this repository contains a json dataset for sockpuppet with contributions (31,334 entries), as well as a control set (105,797) which is the non-sockpuppet.
+
+2. the json dataset was then converted into csv for a better and easier cleaning and viewing.
+
+3. it was subjected to cleaning, during which the text was transformed into lowercase, bracketed content and HTML tags were eliminated, non-alphanumeric characters and numbers were removed, and words were lemmatized. empty cells was removed. we were left with 22,645 entries for sockpuppet set and 53,379 entries for control set, a total of 76,024.
+
+4. it was then balanced, by reducing the set with greater amount of entries equal to the set with least amount of entries. in this case, the control set has the greater amount of entries (53,379) than the sockpuppet set (22,645 entries). entries in the control set were then randomly deleted to be equal with the sockpuppet set (22,645 entries). with the set 50-50 ratio we now have a total of 45290 entries, 22,645 each.
+
+5. after the two set has been balanced it was then merged than shuffled to avoid sequental biases.
+
+6. after it has been merged it was then again split into 2 set, one for training (80%) then one for testing (20%). this will help in the evualuation part of the project. the training set contains 42,970 entries while the testing set contains 10,742 entries.
+
+7. after the training and testing set was separated, multiple models were then tested to see which one is the best is best in extracting semantic, sentiment, and combined semantic & sentiment analysis. these models were based on the literature review.
+
+8. after the model was chosen, the performance between semantic, sentiment, and combined analyses were then evaluated using classification report, ROC Curve, PR Curve, and Confusion Matrix.
+
+9. after the performance between analyses were evaluated, the combined semantic and sentiment analysis were then implemented into web using the flask framework
