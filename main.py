@@ -11,6 +11,7 @@ from sklearn.impute import SimpleImputer
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import word_tokenize
+import memory_profiler
 
 # Download NLTK resources if not already downloaded
 if not nltk.download('stopwords'):
@@ -32,6 +33,7 @@ stop_words = set(stopwords.words('english'))
 lemmatizer = WordNetLemmatizer()
 
 # Preprocess function
+@profile
 def preprocess(text):
     # Convert text to lowercase
     text = text.lower()
@@ -39,16 +41,17 @@ def preprocess(text):
     text = re.sub(r'\[.*?\]|\(.*?\)|\{.*?\}|\<.*?\>|https?://\S+|www\.\S+|<.*?>', '', text)
     # Remove non-alphanumeric characters and numbers
     text = re.sub(r'\W|\d+', ' ', text)
-    # Tokenization
-    tokens = word_tokenize(text)
-    # Remove stop words and lemmatize
-    tokens = [lemmatizer.lemmatize(word) for word in tokens if word not in stop_words]
+    # Tokenization and lemmatization in a single step
+    tokens = [lemmatizer.lemmatize(word) for word in word_tokenize(text) if word not in stop_words]
     # Rejoin words into a cleaned string
     cleaned_text = ' '.join(tokens)
     return cleaned_text
 
-# Preprocessing the data
-data['processed_edit_text'] = data['edit_text'].apply(preprocess)
+# Preprocessing the data (only load a chunk of the data at a time)
+chunk_size = 10000
+for chunk in pd.read_csv(DATA_PATH, chunksize=chunk_size):
+    chunk['processed_edit_text'] = chunk['edit_text'].apply(preprocess)
+    # Perform text analysis and feature engineering for each chun
 
 # Text analysis and feature engineering
 tfidf = TfidfVectorizer(max_features=1000)
@@ -63,8 +66,14 @@ y = data['is_sockpuppet'].values
 y = pd.Series(imputer.fit_transform(y.reshape(-1, 1)).ravel())
 
 # Initialize and train the model
+# Train the model (using a smaller sample of the data for memory efficiency)
+sample_size = 10000
+X_sample = X[:sample_size]
+y_sample = y[:sample_size]
+model.fit(X_sample, y_sample)
+
 model = RandomForestClassifier(n_estimators=100, random_state=42)
-model.fit(X, y)
+model.fit(X_sample, y_sample)
 
 # Define route for home page
 @app.route('/')
