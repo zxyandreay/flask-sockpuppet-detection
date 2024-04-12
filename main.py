@@ -6,13 +6,20 @@ from textblob import TextBlob
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.impute import SimpleImputer
-import nltk
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import word_tokenize
+import nltk
 import os
 
+# Download NLTK stopwords corpus, which contains a list of common stopwords in English.
+nltk.download('stopwords')
+
+# Download NLTK punkt tokenizer models, used for tokenizing text into words.
 nltk.download('punkt')
+
+# Download NLTK WordNet corpus, a lexical database of English language, which is used for lemmatization.
+nltk.download('wordnet')
 
 # Initialize Flask application
 app = Flask(__name__)
