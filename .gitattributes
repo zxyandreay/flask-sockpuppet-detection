@@ -1,1 +1,2 @@
+tools/1.[[:space:]]JSON2CSV/input/control_with_contribs_MODIFIED_FORMAT.json filter=lfs diff=lfs merge=lfs -text
 pattern filter=lfs diff=lfs merge=lfs -text
