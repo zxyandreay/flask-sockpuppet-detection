@@ -19,11 +19,7 @@ This Flask application analyzes and predicts whether a given text input is a "so
 ```
 git clone https://github.com/zxyandreay/flask-sockpuppet-detection.git
 ```
-2. Navigate to the project directory:
-```
-cd flask-sockpuppet-detection
-```
-3. Run `install.bat` to create and activate a virtual environment, and install all the necessary prerequisites:
+2. Run `install.bat` to create and activate a virtual environment, and install all the necessary prerequisites:
 ```
 @echo off
 cd /d %~dp0
