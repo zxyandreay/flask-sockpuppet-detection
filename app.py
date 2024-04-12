@@ -3,6 +3,7 @@ import webbrowser
 import pandas as pd
 import numpy as np
 import re
+import nltk
 from threading import Timer
 from textblob import TextBlob
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -11,6 +12,11 @@ from sklearn.impute import SimpleImputer
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import word_tokenize
+
+# Download NLTK stopwords, punctuation tokenizer, and WordNet lemmatizer resources
+nltk.download('stopwords')
+nltk.download('punkt')
+nltk.download('wordnet'
 
 # Initialize Flask application
 app = Flask(__name__)

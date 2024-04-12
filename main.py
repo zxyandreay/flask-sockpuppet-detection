@@ -2,6 +2,8 @@ from flask import Flask, request, render_template, jsonify
 import pandas as pd
 import numpy as np
 import re
+import nltk
+import os
 from textblob import TextBlob
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.ensemble import RandomForestClassifier
@@ -9,16 +11,10 @@ from sklearn.impute import SimpleImputer
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import word_tokenize
-import nltk
-import os
 
-# Download NLTK stopwords corpus, which contains a list of common stopwords in English.
+# Download NLTK stopwords, punctuation tokenizer, and WordNet lemmatizer resources
 nltk.download('stopwords')
-
-# Download NLTK punkt tokenizer models, used for tokenizing text into words.
 nltk.download('punkt')
-
-# Download NLTK WordNet corpus, a lexical database of English language, which is used for lemmatization.
 nltk.download('wordnet')
 
 # Initialize Flask application
