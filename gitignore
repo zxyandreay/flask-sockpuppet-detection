@@ -1,8 +1,0 @@
-backup/
-venv/
-.gitattributes
-.gitignore
-GIT.md
-git-bash.bat
-git-cmd.bat
-push.bat
