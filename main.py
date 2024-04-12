@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, jsonify
+from flask import Flask, request, render_template
 import pandas as pd
 import numpy as np
 import re
@@ -12,10 +12,13 @@ from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import word_tokenize
 
-# Download NLTK stopwords, punctuation tokenizer, and WordNet lemmatizer resources
-nltk.download('stopwords')
-nltk.download('punkt')
-nltk.download('wordnet')
+# Download NLTK resources if not already downloaded
+if not nltk.download('stopwords'):
+    nltk.data.path.append('./nltk_data')
+if not nltk.download('punkt'):
+    nltk.data.path.append('./nltk_data')
+if not nltk.download('wordnet'):
+    nltk.data.path.append('./nltk_data')
 
 # Initialize Flask application
 app = Flask(__name__)
@@ -24,7 +27,11 @@ app = Flask(__name__)
 DATA_PATH = 'data/wikipedia_sockpuppet_dataset_TRAIN.csv'
 data = pd.read_csv(DATA_PATH)
 
-# Preprocess function (as defined in your script)
+# Initialize NLTK components outside the preprocessing function
+stop_words = set(stopwords.words('english'))
+lemmatizer = WordNetLemmatizer()
+
+# Preprocess function
 def preprocess(text):
     # Convert text to lowercase
     text = text.lower()
@@ -34,19 +41,14 @@ def preprocess(text):
     text = re.sub(r'\W|\d+', ' ', text)
     # Tokenization
     tokens = word_tokenize(text)
-    # Remove stop words
-    stop_words = set(stopwords.words('english'))
-    tokens = [word for word in tokens if word not in stop_words]
-    # Lemmatization
-    lemmatizer = WordNetLemmatizer()
-    tokens = [lemmatizer.lemmatize(word) for word in tokens]
+    # Remove stop words and lemmatize
+    tokens = [lemmatizer.lemmatize(word) for word in tokens if word not in stop_words]
     # Rejoin words into a cleaned string
     cleaned_text = ' '.join(tokens)
     return cleaned_text
 
 # Preprocessing the data
-data['edit_text'] = data['edit_text'].apply(preprocess)
-data['processed_edit_text'] = data['edit_text']
+data['processed_edit_text'] = data['edit_text'].apply(preprocess)
 
 # Text analysis and feature engineering
 tfidf = TfidfVectorizer(max_features=1000)
