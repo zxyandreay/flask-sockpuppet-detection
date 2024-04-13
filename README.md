@@ -61,13 +61,5 @@ python app.py
 - TextBlob: For performing sentiment analysis.
 - Scikit-learn: For machine learning model building and vectorization.
 
-## Contributing
-Contributions to the project are welcome. Please follow these steps:
-1. Fork the repository.
-2. Create a new branch (`git checkout -b feature-branch`).
-3. Make changes and commit them (`git commit -am 'Add some feature'`).
-4. Push to the branch (`git push origin feature-branch`).
-5. Create a new Pull Request.
-
 ## License
 Specify the license under which the project is released.
