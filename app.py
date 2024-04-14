@@ -8,12 +8,6 @@ from textblob import TextBlob
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.impute import SimpleImputer
-<<<<<<< HEAD
-=======
-from nltk.corpus import stopwords
-from nltk.stem import WordNetLemmatizer
-from nltk.tokenize import word_tokenize
->>>>>>> 81654a88 (update)
 
 # Initialize Flask application
 app = Flask(__name__)
@@ -24,30 +18,10 @@ data = pd.read_csv(DATA_PATH)
 
 # Preprocess function (simplified without tokenization, stop words removal, and lemmatization)
 def preprocess(text):
-<<<<<<< HEAD
     text = text.lower()  # Convert text to lowercase
     text = re.sub(r'\[.*?\]|\(.*?\)|\{.*?\}|\<.*?\>|https?://\S+|www\.\S+|<.*?>', '', text)  # Remove text within brackets and HTML tags
     text = re.sub(r'\W|\d+', ' ', text)  # Remove non-alphanumeric characters and numbers
     return text
-=======
-    # Convert text to lowercase
-    text = text.lower()
-    # Remove text within brackets and HTML tags
-    text = re.sub(r'\[.*?\]|\(.*?\)|\{.*?\}|\<.*?\>|https?://\S+|www\.\S+|<.*?>', '', text)
-    # Remove non-alphanumeric characters and numbers
-    text = re.sub(r'\W|\d+', ' ', text)
-    # Tokenization
-    tokens = word_tokenize(text)
-    # Remove stop words
-    stop_words = set(stopwords.words('english'))
-    tokens = [word for word in tokens if word not in stop_words]
-    # Lemmatization
-    lemmatizer = WordNetLemmatizer()
-    tokens = [lemmatizer.lemmatize(word) for word in tokens]
-    # Rejoin words into a cleaned string
-    cleaned_text = ' '.join(tokens)
-    return cleaned_text
->>>>>>> 81654a88 (update)
 
 # Preprocessing the data
 data['processed_edit_text'] = data['edit_text'].apply(preprocess)
