@@ -8,12 +8,14 @@ if not exist .gitignore (
 )
 
 echo Starting to remove files listed in .gitignore from Git tracking...
-for /f "tokens=* usebackq delims=" %%a in (`.gitignore`) do (
+for /f "usebackq delims=" %%a in (`.gitignore`) do (
     set "line=%%a"
-    set "line=!line:~0,1!"
     
-    if "!line!" neq "" (
-        if "!line!" neq "#" (
+    rem Strip out leading spaces for more accurate comparison
+    set "trimmed=!line: =!"
+
+    if not "!trimmed!"=="" (
+        if not "!trimmed:~0,1!"=="#" (
             echo Removing %%a from Git tracking...
             git rm -r --cached "%%a"
             if errorlevel 1 (
@@ -29,7 +31,7 @@ echo Staging changes...
 git add .
 
 echo Committing the changes...
-git commit -m "Updated"
+git commit -m "Removed files listed in .gitignore from tracking and updated repository"
 if errorlevel 1 (
     echo Commit failed, possibly no changes to commit.
 ) else (
