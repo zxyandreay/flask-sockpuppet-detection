@@ -31,7 +31,7 @@ echo Staging changes...
 git add .
 
 echo Committing the changes...
-git commit -m "Removed files listed in .gitignore from tracking and updated repository"
+git commit -m "Updated"
 if errorlevel 1 (
     echo Commit failed, possibly no changes to commit.
 ) else (
