@@ -20,7 +20,7 @@ data = pd.read_csv(DATA_PATH)
 def preprocess(text):
     text = text.lower()  # Convert text to lowercase
     text = re.sub(r'\[.*?\]|\(.*?\)|\{.*?\}|\<.*?\>|https?://\S+|www\.\S+|<.*?>', '', text)  # Remove text within brackets and HTML tags
-    text = re.sub(r'\W|\d+', ' ', text)  # Remove non-alphanumeric characters and numbers
+    text = re.sub(r'\W|\d+', '', text)  # Remove non-alphanumeric characters and numbers
     return text
 
 # Preprocessing the data
