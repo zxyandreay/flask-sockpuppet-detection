@@ -3,11 +3,19 @@ import pandas as pd
 import numpy as np
 import re
 import os
+import sklearn  # For checking scikit-learn version
 from textblob import TextBlob
 import joblib  # Import joblib for loading the model and vectorizer
+import logging
 
-# Initialize Flask application
+# Initialize Flask application and configure logging
 app = Flask(__name__)
+logging.basicConfig(level=logging.DEBUG)
+
+# Check sklearn version
+expected_sklearn_version = '0.24.1'  # example version, adjust as needed
+if sklearn.__version__ != expected_sklearn_version:
+    raise ImportError(f"Expected scikit-learn version {expected_sklearn_version}, got {sklearn.__version__}")
 
 # Check if model files exist and load them
 model_path = 'model/sockpuppet_model.pkl'
@@ -47,7 +55,7 @@ def predict():
         prediction = model.predict(X_input)[0]
         result = 'sockpuppet' if prediction == 1 else 'non-sockpuppet'
     except Exception as e:
-        app.logger.error(f'Error during prediction: {e}')
+        app.logger.error(f'Error during prediction: {e}', exc_info=True)
         return jsonify({'error': str(e)}), 500
 
     return render_template('result.html', prediction=result)
