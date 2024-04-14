@@ -31,3 +31,4 @@ echo Pushing changes to the remote repository...
 git push origin main
 
 echo Update complete.
+pause
