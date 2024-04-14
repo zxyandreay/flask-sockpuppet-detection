@@ -46,6 +46,12 @@ def predict():
         input_text = request.form.get('input_text', None)
         if not input_text:
             raise ValueError("No input text provided")
+
+        # Log the model details
+        app.logger.debug(f"Model type: {type(model)}")
+        app.logger.debug("Model attributes and methods:")
+        app.logger.debug(dir(model))
+
         processed_text = preprocess(input_text)
         X_input_tfidf = tfidf.transform([processed_text]).toarray()
         polarity = TextBlob(processed_text).sentiment.polarity
@@ -62,4 +68,4 @@ def predict():
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
-    app.run(host='0.0.0.0', port=port, debug=True)  # Set debug to True for local testing, set to False before deploying
+    app.run(host='0.0.0.0', port=port, debug=False)  # Ensure debug is False for production
