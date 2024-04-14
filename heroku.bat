@@ -18,3 +18,8 @@ git push heroku main
 
 echo Opening app in Heroku...
 heroku open
+
+echo Checking logs for details...
+heroku logs --tail
+
+pause
