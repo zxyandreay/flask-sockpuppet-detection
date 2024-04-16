@@ -1,7 +1,8 @@
 # Flask Sockpuppet Detection App
 
 ## Overview
-This Flask application analyzes and predicts whether a given text input is a "sockpuppet" or not based on text features. A sockpuppet is an online identity used for purposes of deception within online communities. The app uses machine learning for text analysis, employing a RandomForestClassifier model trained on a pre-processed dataset.
+
+This Flask application is designed to detect sockpuppet contributions on Wikipedia by analyzing user comments. A sockpuppet is an online identity used deceptively within online communities, often to manipulate discussions or opinions. The app leverages machine learning techniques, utilizing a RandomForestClassifier model that has been trained on a dataset of pre-processed text features derived from Wikipedia comments.
 
 ## Getting Started
 
@@ -16,29 +17,25 @@ This Flask application analyzes and predicts whether a given text input is a "so
 - **Pip package manager**: Needed to install the dependencies.
 ### Installation
 
-Download and run the `setup.bat` script, which will clone the repository and install all necessary dependencies:
-
-```batch
+1. Clone the repository to your local machine:
+```
+git clone https://github.com/zxyandreay/flask-sockpuppet-detection.git
+```
+2. Run `install.bat` to create and activate a virtual environment, and install all the necessary prerequisites:
+```
 @echo off
-echo Cloning repository...
-md flask-sockpuppet-detection
-cd flask-sockpuppet-detection
-git clone https://github.com/zxyandreay/flask-sockpuppet-detection.git .
-echo Repository cloned!
+cd /d %~dp0
 
-echo Setting up virtual environment...
 python -m venv venv
 call venv\Scripts\activate
 
-echo Installing dependencies...
-pip install Flask pandas numpy textblob joblib scikit-learn
+pip install Flask pandas numpy textblob joblib gunicorn
 
-echo Setup complete!
 pause
 ```
 ### Running the Application
-Use `start.bat` to activate the virtual environment and automatically run the application. The application will also automatically open your default web browser to `http://127.0.0.1:5000/`:
 
+1. Run the `start.bat` script to activate the virtual environment and start the application. This script also automatically opens the application in your default web browser:
 ```batch
 @echo off
 cd /d %~dp0
@@ -46,7 +43,10 @@ call venv\Scripts\activate
 python app.py
 pause
 ```
+2. Please wait as it may take a few moments for the application to launch and the browser to open automatically. The application will be accessible at `http://127.0.0.1:5000/`.
+
 ## Features
+
 - Text preprocessing including tokenization, stop words removal, and lemmatization.
 - Text analysis using TF-IDF vectorization.
 - Sentiment analysis to extract polarity and subjectivity features.
@@ -54,6 +54,7 @@ pause
 - Web interface for easy interaction with the model.
 
 ## Technology Stack
+
 - Flask: Web framework for serving the application.
 - Pandas and NumPy: For data manipulation and numerical operations.
 - NLTK: For natural language processing, including text preprocessing.
