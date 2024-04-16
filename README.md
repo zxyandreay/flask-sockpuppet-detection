@@ -21,7 +21,7 @@ This Flask application is designed to detect sockpuppet contributions on Wikiped
 ```
 git clone https://github.com/zxyandreay/flask-sockpuppet-detection.git
 ```
-2. Run `install.bat` to create and activate a virtual environment, and install all the necessary prerequisites:
+2. Run `setup.bat` to create and activate a virtual environment, and install all the necessary prerequisites:
 ```
 @echo off
 cd /d %~dp0
@@ -29,7 +29,7 @@ cd /d %~dp0
 python -m venv venv
 call venv\Scripts\activate
 
-pip install Flask pandas numpy textblob joblib gunicorn
+pip install Flask pandas numpy textblob joblib
 
 pause
 ```
