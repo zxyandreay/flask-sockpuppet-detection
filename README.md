@@ -6,43 +6,46 @@ This Flask application analyzes and predicts whether a given text input is a "so
 ## Getting Started
 
 ### Prerequisites
-- Python 3.x
-- Flask: A lightweight WSGI web application framework.
-- Pandas: An open-source data analysis and manipulation tool.
-- NumPy: A library for adding support for large, multi-dimensional arrays and matrices, along with a large collection of high-level mathematical functions to operate on these arrays.
-- NLTK: A leading platform for building Python programs to work with human language data (natural language processing).
-- TextBlob: A library for processing textual data, providing simple APIs for common natural language processing (NLP) tasks.
-- Scikit-learn: A machine learning library for the Python programming language.
-- Pip package manager
-- Virtual environment (recommended)
-### Installation
-1. Clone the repository to your local machine:
-```
-git clone https://github.com/zxyandreay/flask-sockpuppet-detection.git
-```
-2. Run `install.bat` to create and activate a virtual environment, and install all the necessary prerequisites:
-```
-@echo off
-cd /d %~dp0
 
+- **Python 3.x**: Required to run the application.
+- **Flask**: A lightweight WSGI web application framework used to serve the web application.
+- **Pandas**: An open-source data analysis and manipulation tool, used for handling data operations.
+- **NumPy**: A library for supporting large, multi-dimensional arrays and matrices, along with a large collection of high-level mathematical functions, essential for numerical operations in the application.
+- **TextBlob**: Used for performing sentiment analysis, providing polarity and subjectivity scores for text input.
+- **joblib**: For loading the pre-trained RandomForestClassifier model and the TF-IDF vectorizer from disk.
+- **Pip package manager**: Needed to install the dependencies.
+### Installation
+
+Download and run the `setup.bat` script, which will clone the repository and install all necessary dependencies:
+
+```batch
+@echo off
+echo Cloning repository...
+md flask-sockpuppet-detection
+cd flask-sockpuppet-detection
+git clone https://github.com/zxyandreay/flask-sockpuppet-detection.git .
+echo Repository cloned!
+
+echo Setting up virtual environment...
 python -m venv venv
 call venv\Scripts\activate
 
-pip install Flask pandas numpy textblob joblib gunicorn
+echo Installing dependencies...
+pip install Flask pandas numpy textblob joblib scikit-learn
 
+echo Setup complete!
 pause
 ```
 ### Running the Application
-1. Use `start.bat` to activate the virtual environment and run the application:
-```
+Use `start.bat` to activate the virtual environment and automatically run the application. The application will also automatically open your default web browser to `http://127.0.0.1:5000/`:
+
+```batch
 @echo off
 cd /d %~dp0
 call venv\Scripts\activate
 python app.py
 pause
 ```
-2. Open a web browser and navigate to `http://127.0.0.1:5000/`.
-
 ## Features
 - Text preprocessing including tokenization, stop words removal, and lemmatization.
 - Text analysis using TF-IDF vectorization.
