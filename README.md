@@ -18,11 +18,11 @@ This Flask application is designed to detect sockpuppet contributions on Wikiped
 ### Installation
 
 1. Clone the repository to your local machine:
-```
+```batch
 git clone https://github.com/zxyandreay/flask-sockpuppet-detection.git
 ```
 2. Run `setup.bat` to create and activate a virtual environment, and install all the necessary prerequisites:
-```
+```batch
 @echo off
 cd /d %~dp0
 
