@@ -48,7 +48,6 @@ pause
 
 ## Features
 
-- Text preprocessing including tokenization, stop words removal, and lemmatization.
 - Text analysis using TF-IDF vectorization.
 - Sentiment analysis to extract polarity and subjectivity features.
 - Sockpuppet prediction using RandomForestClassifier.
