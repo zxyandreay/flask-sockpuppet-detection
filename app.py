@@ -8,7 +8,7 @@ from textblob import TextBlob
 import joblib  # Import joblib for loading the model and vectorizer
 
 # Initialize Flask application
-app = Flask(__name__)
+app = Flask(__name__, template_folder='html')
 
 # Load the pre-trained model and TF-IDF vectorizer from the 'model' folder
 model = joblib.load('model/sockpuppet_model.pkl')
