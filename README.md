@@ -57,7 +57,6 @@ pause
 
 - Flask: Web framework for serving the application.
 - Pandas and NumPy: For data manipulation and numerical operations.
-- NLTK: For natural language processing, including text preprocessing.
 - TextBlob: For performing sentiment analysis.
 - Scikit-learn: For machine learning model building and vectorization.
 
