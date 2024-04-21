@@ -19,31 +19,31 @@ This Flask application is designed to detect sockpuppet contributions on Wikiped
 ### Installation
 
 1. Clone the repository to your local machine:
-```batch
-git clone https://github.com/zxyandreay/flask-sockpuppet-detection.git
-```
+    ```batch
+    git clone https://github.com/zxyandreay/flask-sockpuppet-detection.git
+    ```
 2. Run `setup.bat` to create and activate a virtual environment, and install all the necessary prerequisites:
-```batch
-@echo off
-cd /d %~dp0
+    ```batch
+    @echo off
+    cd /d %~dp0
 
-python -m venv venv
-call venv\Scripts\activate
+    python -m venv venv
+    call venv\Scripts\activate
 
-pip install Flask pandas numpy textblob joblib scikit-learn
+    pip install Flask pandas numpy textblob joblib scikit-learn
 
-pause
-```
+    pause
+    ```
 ### Running the Application
 
 1. Run the `start.bat` script to activate the virtual environment and start the application. This script also automatically opens the application in your default web browser:
-```batch
-@echo off
-cd /d %~dp0
-call venv\Scripts\activate
-python app.py
-pause
-```
+    ```batch
+    @echo off
+    cd /d %~dp0
+    call venv\Scripts\activate
+    python app.py
+    pause
+    ```
 2. Please wait as it may take a few moments for the application to launch and the browser to open automatically. The application will be accessible at `http://127.0.0.1:5000/`.
 
 ## Features
