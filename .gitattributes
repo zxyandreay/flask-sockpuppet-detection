@@ -1,2 +1,2 @@
 pattern filter=lfs diff=lfs merge=lfs -text
-model/random_forest_classifier.joblib filter=lfs diff=lfs merge=lfs -text
+model/model.joblib filter=lfs diff=lfs merge=lfs -text
