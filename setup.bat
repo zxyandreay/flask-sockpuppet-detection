@@ -1,39 +1,49 @@
 @echo off
-cd /d %~dp0
-echo [INFO] Setting up virtual environment...
+cd /d "%~dp0"
 
-:: Delete existing virtual environment if it exists
-if exist venv rmdir /s /q venv
-
-:: Create a new virtual environment
-python -m venv venv
-if errorlevel 1 (
-    echo [ERROR] Failed to create virtual environment!
+:: Check if Python is installed
+where python >nul 2>nul
+if %errorlevel% neq 0 (
+    echo [ERROR] Python is not installed or not in PATH.
     pause
     exit /b
+)
+
+:: Create virtual environment if not exists
+if not exist venv (
+    echo [INFO] Creating virtual environment...
+    python -m venv venv
 )
 
 :: Activate virtual environment
 call venv\Scripts\activate
-if errorlevel 1 (
-    echo [ERROR] Failed to activate virtual environment!
-    pause
-    exit /b
-)
 
-:: Upgrade pip to the latest version
-echo [INFO] Upgrading pip...
+:: Upgrade pip
 python -m pip install --upgrade pip
 
-:: Install dependencies with --no-cache-dir to avoid corruption issues
-echo [INFO] Installing required packages...
-pip install --no-cache-dir Flask pandas numpy textblob joblib scikit-learn > install_log.txt 2>&1
+:: Install dependencies
+if exist requirements.txt (
+    echo [INFO] Installing dependencies...
+    pip install -r requirements.txt
+) else (
+    echo [WARNING] requirements.txt not found. Ensure dependencies are installed manually.
+)
 
-if errorlevel 1 (
-    echo [ERROR] Package installation failed! Check install_log.txt for details.
+:: Check if model files exist
+if not exist model\random_forest.pkl (
+    echo [ERROR] Model file not found: model\random_forest.pkl
     pause
     exit /b
 )
 
-echo [SUCCESS] Setup complete! Virtual environment and dependencies are ready.
-pause
+if not exist model\feature_metadata.pkl (
+    echo [ERROR] Feature metadata file not found: model\feature_metadata.pkl
+    pause
+    exit /b
+)
+
+:: Start the Flask app
+python app.py
+
+:: Deactivate virtual environment
+deactivate
