@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Prediction Result</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         body {
             display: flex;
@@ -11,50 +10,41 @@
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #f0f0f0, #d9e4f5);
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
         }
         .container {
             width: 100%;
             max-width: 600px;
-            padding: 25px;
+            padding: 20px;
             margin: 20px;
             background-color: #fff;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            border-radius: 10px;
-            text-align: center;
-        }
-        h1 {
-            font-weight: 600;
-            color: #333;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
         }
         .alert {
-            padding: 15px;
+            padding: 20px;
             margin-bottom: 15px;
-            border-radius: 6px;
-            font-weight: 500;
-            color: #333;
+            border-radius: 5px;
+            color: #000; /* Default text color */
         }
-        .alert-zero {
-            background-color: #d4edda;
-            color: #155724;
+        .alert-zero { /* Green for non-sockpuppet */
+            background-color: #e9ffd9;
         }
-        .alert-one {
-            background-color: #f8d7da;
-            color: #721c24;
+        .alert-one { /* Red for sockpuppet */
+            background-color: #ffd9d9;
         }
         a {
             display: inline-block;
             padding: 10px 15px;
-            background: #007bff;
+            background-color: #007bff;
             color: white;
             text-decoration: none;
-            border-radius: 6px;
-            transition: background 0.3s;
-            margin-top: 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
         }
         a:hover {
-            background: #0056b3;
+            background-color: #0056b3;
         }
     </style>
 </head>

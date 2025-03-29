@@ -4,16 +4,6 @@
 
 This Flask application detects sockpuppet activities on Wikipedia by analyzing user-generated comments. Sockpuppets are online identities used deceptively to manipulate discussions or public opinion. The application employs a machine learning model, specifically a **RandomForestClassifier**, trained on a dataset of pre-processed text features, including **S-BERT embeddings** and **sentiment analysis** scores.
 
-## Table of Contents
-
-- How It Works
-- Getting Started
-- Features
-- API Endpoints
-- Example Usage
-- Technology Stack
-- License
-
 ## How It Works
 
 1. **Model Loading**
