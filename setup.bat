@@ -8,7 +8,7 @@ call venv\Scripts\activate
 
 echo [INFO] Upgrading pip and installing dependencies...
 python -m pip install --upgrade pip
-pip install Flask pandas numpy textblob joblib scikit-learn
+pip install Flask pandas numpy textblob joblib scikit-learn sentence-transformers
 
 echo [SUCCESS] Setup complete!
 pause

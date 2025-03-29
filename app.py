@@ -1,52 +1,42 @@
-from flask import Flask, request, render_template
-import webbrowser
-import numpy as np
-import re
-from threading import Timer
-from textblob import TextBlob
-from joblib import load
 import pandas as pd
+import numpy as np
+import joblib
 import os
+import webbrowser
+from flask import Flask, request, jsonify, render_template
+from textblob import TextBlob
+from sentence_transformers import SentenceTransformer
+from threading import Timer
 
-# Initialize Flask application
-app = Flask(__name__, template_folder='html')
+# Specify the correct template folder
+app = Flask(__name__, template_folder="html")
 
-# Load the trained model and feature information
-model_path = 'model/random_forest.pkl'
-feature_metadata_path = 'model/feature_metadata.pkl'
-embeddings_lookup_path = 'model/embeddings_lookup.csv'
+# Load trained model and metadata
+model_path = "model/random_forest.pkl"
+feature_metadata_path = "model/feature_metadata.pkl"
+embeddings_lookup_path = "model/embeddings_lookup.csv"
 
-if not os.path.exists(model_path) or not os.path.exists(feature_metadata_path):
-    raise FileNotFoundError("[ERROR] Model or feature metadata file not found. Ensure the training process is completed.")
-
-print("[INFO] Loading trained model...")
-model = load(model_path)
+print("[INFO] Loading model...")
+model = joblib.load(model_path)
 print("[INFO] Model loaded successfully.")
 
 print("[INFO] Loading feature metadata...")
-feature_metadata = load(feature_metadata_path)
-embedding_cols = feature_metadata['features'][:-2]  # Exclude last two sentiment features
-sentiment_cols = feature_metadata['features'][-2:]
+feature_metadata = joblib.load(feature_metadata_path)
+feature_names = feature_metadata['features']
 print("[INFO] Feature metadata loaded.")
 
-# Load precomputed embeddings for lookup
+# Load embeddings lookup table
 if os.path.exists(embeddings_lookup_path):
     print("[INFO] Loading embeddings lookup table...")
-    embeddings_df = pd.read_csv(embeddings_lookup_path, index_col='edit_text')
-    print("[INFO] Embeddings lookup loaded.")
+    embeddings_lookup = pd.read_csv(embeddings_lookup_path)
+    embeddings_lookup.set_index('edit_text', inplace=True)
+    print("[INFO] Embeddings lookup table loaded.")
 else:
-    print("[WARNING] Embeddings lookup table not found. Using dynamically generated embeddings for missing cases.")
-    embeddings_df = None
+    print("[WARNING] Embeddings lookup table not found. Defaulting to dynamic embedding generation.")
+    embeddings_lookup = None
 
-# Preprocess function
-def preprocess(text):
-    print("[INFO] Preprocessing input text...")
-    text = text.lower()
-    text = re.sub(r'https?://\S+|www\.\S+', '', text)
-    text = re.sub(r'\[.*?\]|\(.*?\)|\{.*?\}|\<.*?\>|\=.*?\=', '', text)
-    text = re.sub(r'\W', ' ', text)
-    print("[INFO] Preprocessing complete.")
-    return text.strip()
+# Load Sentence-BERT model for dynamic embeddings
+sbert_model = SentenceTransformer("all-MiniLM-L6-v2")
 
 @app.route('/')
 def index():
@@ -54,50 +44,57 @@ def index():
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    input_text = request.form['input_text']
-    processed_text = preprocess(input_text)
-    
-    # Retrieve embeddings or generate new ones dynamically
-    print("[INFO] Retrieving embeddings...")
-    if embeddings_df is not None and processed_text in embeddings_df.index:
-        embedding_features = embeddings_df.loc[processed_text, embedding_cols].values
+    data = request.json if request.is_json else request.form
+    edit_text = data.get('input_text', "").strip()
+
+    if not edit_text:
+        return jsonify({"error": "Missing 'input_text' in request."}), 400
+
+    # Retrieve embeddings from lookup table
+    if embeddings_lookup is not None and edit_text in embeddings_lookup.index:
+        print("[INFO] Using precomputed embeddings.")
+        features = embeddings_lookup.loc[edit_text].values.reshape(1, -1)
     else:
-        print("[WARNING] Embeddings not found. Generating dynamically...")
-        embedding_features = np.random.normal(0, 1, len(embedding_cols))  # Generate random embeddings
-    print("[INFO] Embeddings retrieved.")
-    
+        print(f"[INFO] Generating new embeddings for: {edit_text}")
+        features = sbert_model.encode([edit_text])
+        features = features / np.linalg.norm(features)  # Normalize the new embeddings
+
+    print("[DEBUG] Generated Embeddings Shape:", features.shape)
+    print("[DEBUG] Generated Embeddings:", features)
+
     # Compute sentiment features
-    print("[INFO] Computing sentiment features...")
-    polarity = TextBlob(processed_text).sentiment.polarity
-    subjectivity = TextBlob(processed_text).sentiment.subjectivity
-    sentiment_features = np.array([polarity, subjectivity])
-    print(f"[INFO] Sentiment computed: Polarity={polarity}, Subjectivity={subjectivity}")
-    
-    # Combine embeddings and sentiment features
-    print("[INFO] Combining features...")
-    
-    # Convert array to DataFrame with correct feature names
-    X_input = pd.DataFrame([np.hstack((embedding_features, sentiment_features))], columns=feature_metadata['features'])
+    polarity = TextBlob(edit_text).sentiment.polarity
+    subjectivity = TextBlob(edit_text).sentiment.subjectivity
 
-    # Ensure columns are in the exact order as during training
-    X_input = X_input[feature_metadata['features']]
+    # Construct feature vector
+    X_input = np.zeros((1, len(feature_names)))
+    embedding_dim = features.shape[1] if len(features.shape) > 1 else len(features)
 
-    print("[DEBUG] Feature Vector Shape:", X_input.shape)
-    print("[DEBUG] Sample Feature Vector:", X_input)
-    print("[INFO] Features combined successfully.")
+    for i, feature in enumerate(feature_names):
+        if feature.startswith("embedding_"):
+            embedding_index = int(feature.split("_")[-1])
+            if embedding_index < embedding_dim:
+                X_input[0, i] = features[0, embedding_index]
+        elif feature == "polarity":
+            X_input[0, i] = polarity
+        elif feature == "subjectivity":
+            X_input[0, i] = subjectivity
+
+    print("[DEBUG] Final Feature Vector for Model:", X_input)
+
+    # Predict sockpuppet status
+    probabilities = model.predict_proba(X_input)[0]
+    print("[DEBUG] Prediction Probabilities:", probabilities)
     
-    # Prediction
-    print("[INFO] Making prediction...")
-    prediction = model.predict(X_input)[0]
-    result = 'sockpuppet' if prediction == 1 else 'non-sockpuppet'
-    print(f"[INFO] Prediction result: {result}")
-    return render_template('result.html', prediction=result)
+    prediction = 1 if probabilities[1] >= 0.5 else 0
+    result = "sockpuppet" if prediction == 1 else "non-sockpuppet"
+    
+    return render_template("result.html", prediction=result)
 
-# Open browser function
+
 def open_browser():
     webbrowser.open_new('http://127.0.0.1:5000/')
 
 if __name__ == '__main__':
     Timer(1, open_browser).start()
-    print("[INFO] Starting Flask server...")
     app.run(debug=True, use_reloader=False)

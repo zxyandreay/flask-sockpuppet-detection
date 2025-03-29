@@ -2,7 +2,7 @@
 
 ## Overview
 
-This Flask application detects sockpuppet activities on Wikipedia by analyzing user-generated comments. Sockpuppets are online identities used deceptively to manipulate discussions or public opinion. The application employs a machine learning model, specifically a **RandomForestClassifier**, trained on a dataset of pre-processed text features, including **embeddings** and **sentiment analysis** scores.
+This Flask application detects sockpuppet activities on Wikipedia by analyzing user-generated comments. Sockpuppets are online identities used deceptively to manipulate discussions or public opinion. The application employs a machine learning model, specifically a **RandomForestClassifier**, trained on a dataset of pre-processed text features, including **S-BERT embeddings** and **sentiment analysis** scores.
 
 ## How It Works
 
@@ -10,13 +10,14 @@ This Flask application detects sockpuppet activities on Wikipedia by analyzing u
    - Loads a pre-trained **RandomForestClassifier** model from disk (`random_forest.pkl`).
    - Retrieves feature names from `feature_metadata.pkl`.
    - Uses an **embeddings lookup table** (`embeddings_lookup.csv`) for precomputed text embeddings.
+   - Dynamically generates embeddings using **Sentence-BERT (S-BERT)** when needed.
 2. **Data Processing & Feature Extraction**
    - **Text Preprocessing**
      - Converts text to lowercase.
      - Removes URLs, special characters, and non-alphanumeric symbols.
    - **Embedding Retrieval**
      - If a match exists in `embeddings_lookup.csv`, the corresponding embedding is used.
-     - Otherwise, generates a **random normal distribution embedding** to handle missing values.
+     - Otherwise, generates **new embeddings dynamically** using **S-BERT** (`all-MiniLM-L6-v2`).
    - **Sentiment Analysis**
      - Computes **polarity** (positive/negative sentiment) and **subjectivity** (factual vs. opinion-based content) using **TextBlob**.
    - Extracted features (embeddings + sentiment scores) are formatted into a structured input vector.
@@ -41,6 +42,7 @@ Ensure the following dependencies are installed:
 - **TextBlob**: Performs sentiment analysis, extracting polarity and subjectivity scores.
 - **Scikit-learn**: Machine learning library for model operations.
 - **Joblib**: Loads the pre-trained **RandomForestClassifier** model.
+- **Sentence-Transformers**: Provides **S-BERT embeddings** for text analysis.
 - **Pip**: Required to install dependencies.
 
 ### Installation
@@ -64,7 +66,7 @@ Ensure the following dependencies are installed:
    
    echo [INFO] Upgrading pip and installing dependencies...
    python -m pip install --upgrade pip
-   pip install Flask pandas numpy textblob joblib scikit-learn
+   pip install Flask pandas numpy textblob joblib scikit-learn sentence-transformers
    
    echo [SUCCESS] Setup complete!
    pause
@@ -87,7 +89,7 @@ Ensure the following dependencies are installed:
 ## Features
 
 - **Text Preprocessing**: Cleans and normalizes text input.
-- **Embeddings-Based Analysis**: Uses precomputed embeddings where available or generates new ones dynamically.
+- **S-BERT Embeddings**: Generates embeddings dynamically for unseen text.
 - **Sentiment Analysis**: Extracts **polarity** and **subjectivity** using TextBlob.
 - **Machine Learning Detection**: Utilizes a **RandomForestClassifier** to predict sockpuppet activity.
 - **Web-Based UI**: Flask-powered interface for easy interaction and testing.
@@ -101,7 +103,7 @@ Ensure the following dependencies are installed:
 ## Technology Stack
 
 - **Backend**: Flask (Python)
-- **Machine Learning**: Scikit-learn, TextBlob
+- **Machine Learning**: Scikit-learn, TextBlob, Sentence-BERT
 - **Data Handling**: Pandas, NumPy
 - **Deployment**: Locally hosted via Flask (for testing)
 
