@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Prediction Result</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+        .container {
+            width: 100%;
+            max-width: 600px;
+            padding: 20px;
+            margin: 20px;
+            background-color: #fff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        .alert {
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            color: #000;
+        }
+        .alert-zero {
+            background-color: #e9ffd9; /* green for non-sockpuppet */
+        }
+        .alert-one {
+            background-color: #ffd9d9; /* red for sockpuppet */
+        }
+        .alert-warning {
+            background-color: #fff9c4; /* yellow for warning */
+        }
+        a {
+            display: inline-block;
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        a:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Prediction Result</h1>
+
+        {% if prediction %}
+            <div class="alert {% if prediction == 'sockpuppet' %}alert-one{% elif prediction == 'non-sockpuppet' %}alert-zero{% endif %}">
+                <h4 class="alert-heading">Prediction Completed!</h4>
+                <p>The analysis predicts the following result:</p>
+                <hr>
+                <p class="mb-0">The comment was made by a <strong>{{ prediction|capitalize }}</strong></p>
+            </div>
+        {% elif warning %}
+            <div class="alert alert-warning">
+                <h4 class="alert-heading">Warning</h4>
+                <p>{{ error_message }}</p>
+            </div>
+        {% elif error_message %}
+            <div class="alert alert-one">
+                <h4 class="alert-heading">Error</h4>
+                <p>{{ error_message }}</p>
+            </div>
+        {% else %}
+            <div class="alert alert-one">
+                <h4 class="alert-heading">No Prediction Available!</h4>
+                <p>There was a problem processing your request.</p>
+            </div>
+        {% endif %}
+
+        <a href="/">Go Back</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,4 @@
+pattern filter=lfs diff=lfs merge=lfs -text
+model/embeddings_lookup.csv filter=lfs diff=lfs merge=lfs -text
+model/random_forest.pkl filter=lfs diff=lfs merge=lfs -text
+data/combined_train.csv filter=lfs diff=lfs merge=lfs -text
